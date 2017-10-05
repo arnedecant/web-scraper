@@ -1,0 +1,86 @@
+footer {
+	margin-top: auto;
+	margin-bottom: 20px;
+	font-family: 'Overpass Mono', monospace;
+
+	a {
+		color: var(--color-trigger-default);
+	}
+}
+
+.tooltip {
+	position: relative;
+	display: inline-block;
+
+	&__trigger {
+		cursor: pointer;
+		position: relative;
+
+		&-text {
+			display: block;
+			padding: 0.85em;
+			text-decoration: none;
+			color: var(--color-trigger-default);
+		}
+	}
+
+	&__base {
+		position: absolute;
+		bottom: 2em;
+		left: 50%;
+		margin-left: -150px;
+		width: 300px;
+		height: 200px;
+		display: flex;
+	    align-items: center;
+	    justify-content: center;
+		opacity: 0;
+		pointer-events: none;
+	}
+
+	&__content {
+		color: $cPrimary;
+		display: flex;
+		position: relative;
+		align-items: center;
+		justify-content: center;
+		width: 65%;
+		padding: 0 1em;
+		opacity: 0;
+		font-size: 0.85em;
+		line-height: 1.5;
+	}
+
+	&__shape, 
+	&__deco {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		top: 0;
+		left: 0;
+	}
+	
+	&__shape {
+		fill: $cSecondary;
+	}
+}
+
+body.dir .tooltip {
+	&__content {
+		color: $cBackground;
+	}
+
+	&__shape {
+		fill: $cBlack;
+	}
+}
+
+/* Narvi */
+.path-narvi {
+	transform-origin: 200px 150px;
+}
+
+.tooltip--narvi .tooltip__content {
+	width: 80%;
+	text-align: center;
+}
