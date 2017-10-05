@@ -5,12 +5,23 @@
         <meta name="description" content="Web scraper">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Web scraper</title>
-        <link rel="stylesheet" href="css/style.css">
+        <link rel="stylesheet" href="css/normalize.css">
+        <link rel="stylesheet" href="css/styles.css">
         <link rel="author" href="humans.txt">
     </head>
     <body>
         <h1>Web scraper</h1>
+        <section class="scraper">
+        	<form class="scraper">
+        		<input type="text" class="address" placeholder="Web address" value="https://www.arnedecant.be/">
+        		<button>Scrape</button>
+        	</form>
+        </section>
+        <section class="results">
+        	
+        </section>
         <script src="js/jquery-3.2.1.js"></script>
+        <script src="js/jquery.xdomainajax.js"></script>
         <script src="js/main.js"></script>
     </body>
 </html>
