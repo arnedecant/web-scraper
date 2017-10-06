@@ -13,10 +13,20 @@ html {
 body {
 	font: {
 		size: 1.6rem;
-		family: $fPrimary; // variables inside partials > _variables.scss
+		family: $fPrimary;
 	}
 	color: $cPrimary;
 	background-color: $cDefault;
+}
+
+.background {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	background-image: $imgBackground;
+	opacity: 0.1;
 }
 
 a {

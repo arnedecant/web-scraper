@@ -1,8 +1,31 @@
+const PROPERTIES = {
+	anchor: {
+		name: 'anchor',
+		element: 'a',
+		scrape: 'href'
+	},
+	image: {
+		name: 'image',
+		element: 'img',
+		scrape: 'src'
+	}
+}
+
 jQuery(document).ready(function($){
 	init();
 });
 
 function init() {
+	for (let key in PROPERTIES) {
+		if (!PROPERTIES.hasOwnProperty(key)) continue;
+		let prop = PROPERTIES[key];
+
+		console.log(prop.element);
+
+		let option = '<option value="'+prop.name+'" data-name="'+prop.name+'" data-element="'+prop.element+'" data-scrape="'+prop.scrape+'">'+prop.name+'</option>'
+		$('form.scraper select.element').append(option);
+	}
+
 	$('form.scraper').on('submit', function(e) {
 		e.preventDefault();
 		e.stopPropagation();
@@ -10,7 +33,7 @@ function init() {
 		let $form = $(this);
 		let address = $form.find('input.address').val();
 
-		$.getJSON('http://www.whateverorigin.org/get?url=' + encodeURIComponent(address) + '&callback=?', function(data){
+		$.getJSON('https://whateverorigin.herokuapp.com/get?url=' + encodeURIComponent(address) + '&callback=?', function(data){
 			let results = getResults(data.contents, 'a');
 			let html = '<ul>';
 
