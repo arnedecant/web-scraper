@@ -27,6 +27,7 @@ body {
 	height: 100vh;
 	background-image: $imgBackground;
 	opacity: 0.1;
+	z-index: -1;
 }
 
 a {
