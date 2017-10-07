@@ -12,8 +12,17 @@ const ELEMENTS = {
 }
 
 jQuery(document).ready(function($){
+	materialize();
 	init();
 });
+
+function materialize() {
+	$('select').material_select();
+	$('select').on('contentChanged', function() {
+		// re-initialize (update)
+		$(this).material_select();
+	});
+}
 
 function init() {
 	for (let key in ELEMENTS) {
@@ -21,7 +30,7 @@ function init() {
 		let el = ELEMENTS[key];
 
 		let option = '<option value="'+el.name+'" data-name="'+el.name+'" data-tag="'+el.tag+'" data-scrape="'+el.scrape+'">'+el.name+'</option>'
-		$('form.scraper select.element').append(option);
+		$('form.scraper select.element').append(option).trigger('contentChanged');
 	}
 
 	$('form.scraper').on('submit', function(e) {

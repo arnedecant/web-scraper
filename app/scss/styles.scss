@@ -1,22 +1,11 @@
 //@import 'libs/bourbon'; // http://bourbon.io/
+@import 'vendor/*';
+@import 'materialize/*';
 @import 'variables/*';
 @import 'partials/*';
 
 *, *::after, *::before {
 	box-sizing: border-box;
-}
-
-html {
-	font-size: 62.5%;
-}
-
-body {
-	font: {
-		size: 1.6rem;
-		family: $fPrimary;
-	}
-	color: $cPrimary;
-	background-color: $cDefault;
 }
 
 .background {
@@ -30,7 +19,7 @@ body {
 	z-index: -1;
 }
 
-a {
-	color: $cSecondary;
-	text-decoration: none;
+h1 {
+	font-family: 'Amatic SC', 'Roboto', 'sans-serif';
+	text-align: center;
 }
