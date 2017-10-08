@@ -2,29 +2,50 @@ const ELEMENTS = {
 	anchor: {
 		name: 'anchor',
 		tag: 'a',
-		scrape: 'href'
+		scrape: 'href',
+		containerClass: 'collection',
+		fullWidth: false
 	},
 	image: {
 		name: 'image',
 		tag: 'img',
-		scrape: 'src'
+		scrape: 'src',
+		containerClass: 'collection',
+		fullWidth: true
 	}
 }
 
+let partials = {
+	card: ''
+};
+
 jQuery(document).ready(function($){
+	initPartials();
 	materialize();
 	init();
 });
 
+function initPartials() {
+	for (let key in partials) {
+		getPartial({
+			url: '/inc/'+key+'.html', 
+			onSuccess: function(data) {
+				partials[key] = data;
+			}
+		});
+	}
+}
+
 function materialize() {
 	$('select').material_select();
 	$('select').on('contentChanged', function() {
-		// re-initialize (update)
-		$(this).material_select();
-	});
+		$(this).material_select(); // re-initialize (update)
+	}); 
 }
 
 function init() {
+	
+
 	for (let key in ELEMENTS) {
 		if (!ELEMENTS.hasOwnProperty(key)) continue;
 		let el = ELEMENTS[key];
@@ -44,39 +65,56 @@ function init() {
 		if (!element) alert('An error has occurred.');
 
 		$.getJSON('https://whateverorigin.herokuapp.com/get?url=' + encodeURIComponent(address) + '&callback=?', function(data){
-			let results = getResults(data.contents, element);
+			let results = getResults(data.contents, element, address, false);
 
-			console.log(results);
-
-			let html = '<ul>';
+			let html = '<section class="card-panel' + element.containerClass + '">';
+			if (element.tag === 'img') html += '<div class="row"><div class="row col s12 cards-container">';
 
 			if (results) {
 				for (let i = 0, r; r = results[i]; i++) {
-					html += '<li>';
+					// html += '<li class="collection-item">';
 
 					if (element.tag === 'a') {
-						html += '<a href="' + r + '" target="_blank">' + r + '</a>';
+						html += '<a href="' + r + '" target="_blank" class="collection-item">' + r + '</a>';
 
 						if (isInternalUrl(address, r)) {
 							console.log(r);
 						}
 					} else if (element.tag === 'img') {
-						html += '<img src="" />'
+						let partial = getPartial({
+							html: partials.card, 
+							variables: {
+								title: '',
+								image: r,
+								content: 'Lorem ipsum dolor sit amet.',
+								linkUrl: r,
+								linkLabel: 'View image'
+							}
+						});
+						console.log(partial);
+
+						html += partial;
 					}
 
-					
-
-					html += '</li>';
+					// html += '</li>';
 				}
 			}
 
-			html += '</ul>';
-			$('section.results').html(html);
+			if (element.tag === 'img') html += '</div></div>';
+			html += '</section>';
+
+			if (element.fullWidth) {
+				$('.results-container').removeClass('container');
+			} else {
+				$('.results-container').addClass('container');
+			}
+
+			$('.results-container').html(html);
 		});
 	});
 }
 
-function getResults(content, element) {
+function getResults(content, element, address, getAttributes) {
 	let results = [];
 	let data = content.split('<' + element.tag + ' ');
 	let scrape = element.scrape + '=';
@@ -88,12 +126,30 @@ function getResults(content, element) {
 			url = part.getBetween(scrape + '"', '"');
 		}
 
-		if ((element.tag === 'a' && url.startsWith("http")) || element.tag === 'img') {
-			results.push(url);
+		if (!urlAllowed(url)) continue;
+
+		if (!url.startsWith("http")) {
+			if (address.endsWith('/') && url.startsWith('/')) {
+				url = address + url.substr(1);
+			}
 		}
+
+		results.push(url);
 	}
 
 	return results;
+}
+
+function urlAllowed(url) {
+	if (!url) return false;
+
+	const BLACKLIST = ['javascript', '#', 'mailto'];
+
+	for (let i = 0, bl; bl = BLACKLIST[i]; i++) {
+		if (url.startsWith(bl)) return false;
+	}
+
+	return true;
 }
 
 function isInternalUrl(mainUrl, scrapeUrl) {
@@ -126,6 +182,38 @@ function stripUrl(url) {
 	result = arrResult.join('.');
 
 	return result;
+}
+
+function getPartial(options) {
+	if (options.html && !options.url) {
+		return fillPartial(options);
+	} else {
+		$.ajax({
+			url: options.url,
+			success: function(data) {
+				fillPartial(options, data);
+			},
+			error: function(error) {
+				if (typeof options.onError === 'function') options.onError(error);
+			}
+		});
+	}
+}
+
+function fillPartial(options, data) {
+	if (data) options.html = data;
+
+	let html = options.html;
+
+	if (options.variables) {
+		for (let key in options.variables) {
+			html = html.replace('{{' + key + '}}', options.variables[key]);
+		}
+	}
+
+	if (options.onSuccess && typeof options.onSuccess === 'function') options.onSuccess(html);
+
+	return html;
 }
 
 String.prototype.getBetween = function(start, end) {
