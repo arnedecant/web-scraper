@@ -28,7 +28,7 @@ jQuery(document).ready(function($){
 function initPartials() {
 	for (let key in partials) {
 		getPartial({
-			url: '../inc/'+key+'.html', 
+			url: window.location.href + '/inc/'+key+'.html', 
 			onSuccess: function(data) {
 				partials[key] = data;
 			}
