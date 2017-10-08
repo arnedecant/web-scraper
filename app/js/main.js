@@ -28,7 +28,7 @@ jQuery(document).ready(function($){
 function initPartials() {
 	for (let key in partials) {
 		getPartial({
-			url: '/inc/'+key+'.html', 
+			url: '../inc/'+key+'.html', 
 			onSuccess: function(data) {
 				partials[key] = data;
 			}
@@ -67,7 +67,7 @@ function init() {
 		$.getJSON('https://whateverorigin.herokuapp.com/get?url=' + encodeURIComponent(address) + '&callback=?', function(data){
 			let results = getResults(data.contents, element, address, false);
 
-			let html = '<section class="card-panel' + element.containerClass + '">';
+			let html = '<section class="card-panel ' + element.containerClass + '">';
 			if (element.tag === 'img') html += '<div class="row"><div class="row col s12 cards-container">';
 
 			if (results) {
