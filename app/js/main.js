@@ -10,7 +10,7 @@ const ELEMENTS = {
 		name: 'image',
 		tag: 'img',
 		scrape: 'src',
-		containerClass: 'collection',
+		containerClass: '',
 		fullWidth: true
 	}
 }
@@ -66,9 +66,13 @@ function init() {
 
 		$.getJSON('https://whateverorigin.herokuapp.com/get?url=' + encodeURIComponent(address) + '&callback=?', function(data){
 			let results = getResults(data.contents, element, address, false);
+			let html = '';
 
-			let html = '<section class="card-panel ' + element.containerClass + '">';
-			if (element.tag === 'img') html += '<div class="row"><div class="row col s12 cards-container">';
+			if (element.tag === 'a') {
+				html += '<div class="row"><div class="col s12"><section class="card-panel ' + element.containerClass + '">';
+			} else if (element.tag === 'img') {
+				html += '<div class="row"><div class="col s12"><section class="cards-container ' + element.containerClass + '">';
+			}
 
 			if (results) {
 				for (let i = 0, r; r = results[i]; i++) {
@@ -78,7 +82,7 @@ function init() {
 						html += '<a href="' + r + '" target="_blank" class="collection-item">' + r + '</a>';
 
 						if (isInternalUrl(address, r)) {
-							console.log(r);
+							// console.log(r);
 						}
 					} else if (element.tag === 'img') {
 						let partial = getPartial({
@@ -91,7 +95,6 @@ function init() {
 								linkLabel: 'View image'
 							}
 						});
-						console.log(partial);
 
 						html += partial;
 					}
@@ -100,8 +103,8 @@ function init() {
 				}
 			}
 
-			if (element.tag === 'img') html += '</div></div>';
-			html += '</section>';
+			// if (element.tag === 'img') html += '</div></div>';
+			html += '</section></div></div>';
 
 			if (element.fullWidth) {
 				$('.results-container').removeClass('container');

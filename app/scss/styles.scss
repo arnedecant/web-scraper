@@ -24,14 +24,14 @@ h1 {
 	text-align: center;
 }
 
-.results-container {
-	max-width: 98%;
-	margin: 0 auto;
-}
+// .results-container {
+// 	max-width: 98%;
+// 	margin: 0 auto;
+// }
 
 .cards-container {
 	column-break-inside: avoid;
-	column-count: 4;
+	column-count: 5;
 
 	.card {
 		display: inline-block;
